@@ -6,9 +6,11 @@ export default {
   ],
   theme: {
     screens: {
-      'xs': '465px', // New breakpoint for mobile hero
+      'xs': '465px',
       'mobile': '620px',
       'tablet': '850px',
+
+      // optionally keep your overrides for large screens
       'lg': '1024px',
       'xl': '1280px',
       '2xl': '1536px',
