@@ -607,28 +607,27 @@ const ProjectModal = ({ project, onClose, onNav }) => {
     transition: { duration: 0.6, ease: "easeOut" },
   };
 
-// Blinds-style reveal that opens DOWN, slower, but actually *fires*
+// Simplified RowReveal that works in Chrome builds
 const RowReveal = ({ children, delay = 0 }) => (
   <motion.div
-    className="overflow-hidden will-change-transform"
+    // 1. Added 'z-10' to force a stacking context
+    className="relative z-10" 
     initial={{
       opacity: 0,
-      clipPath: "inset(0 0 100% 0)", // hidden from the bottom
-      y: 12,                         // small drop so it feels like it falls down
+      y: 40, // Slide up from 40px
     }}
     whileInView={{
       opacity: 1,
-      clipPath: "inset(0 0 0 0)",    // fully revealed
       y: 0,
     }}
     viewport={{
       once: true,
-      amount: 0.35,                  // 🔑 triggers when ~35% is in view
+      amount: 0.1, // Trigger as soon as 10% is visible
     }}
     transition={{
-      duration: 1.15,                // still on the slower side
-      ease: [0.2, 0.8, 0.3, 1],
-      delay: delay + 0.25,           // keeps your “later” feeling
+      duration: 0.8,
+      ease: "easeOut",
+      delay: delay + 0.1,
     }}
   >
     {children}
@@ -1482,10 +1481,10 @@ const WorkSection = ({
   const isFirstRow = index === 0;
 
   // All three headings visible & clustered during intro
-  const startOffsets = [-40, 0, 40];
+  const startOffsets = [0, 0, 0];
 
   // Big overshoot: DESIGN high, BRAND middle, IMPACT lower
-  const overshootOffsets = [-260, -540, -820];
+  const overshootOffsets = [-200, -250, -300];
 
   const headingVariants = {
     start: (i) => ({
@@ -1496,7 +1495,7 @@ const WorkSection = ({
     }),
     overshoot: (i) => ({
       opacity: 1,
-      scale: 1.7,
+      scale: 1.4,
       y: overshootOffsets[i],
       color: "#FFFFFF",
     }),
@@ -1576,26 +1575,36 @@ const WorkSection = ({
         >
           <ProjectCard project={project} onSelect={onProjectSelect} />
         </motion.div>
-      ) : (
-        // Rows 2 & 3: blind-style open when they scroll into view
+) : (
+        // Rows 2 & 3: "Blinds" Reveal via Height (Chrome-Safe)
+        // This mimics the clip-path effect by "unrolling" the container height.
         <motion.div
           className={gridClasses}
-          style={{ transformOrigin: "top", willChange: "clip-path" }}
-          initial={{
-            opacity: 0,
-            clipPath: "inset(0 0 100% 0)",
+          // 1. Hides content that hasn't "unrolled" yet
+          style={{ overflow: "hidden" }} 
+
+          // 2. Start with 0 height (effectively invisible)
+          initial={{ 
+            height: 0, 
+            opacity: 0 
           }}
-          whileInView={{
-            opacity: 1,
-            clipPath: "inset(0 0 0% 0)",
+          
+          // 3. Animate to natural height (unrolling top-to-bottom)
+          whileInView={{ 
+            height: "auto", 
+            opacity: 1 
           }}
+          
+          // 4. Trigger early to ensure it catches the scroll
           viewport={{
             once: true,
-            amount: 0.8,
+            amount: 0.45, 
           }}
+          
+          // 5. Match your original slow, premium easing
           transition={{
             duration: 1.1,
-            delay: 0.45,
+            delay: 0.2,
             ease: [0.2, 0.8, 0.3, 1],
           }}
         >
