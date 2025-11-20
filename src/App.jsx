@@ -19,7 +19,6 @@ import {
 // DATA – CASE STUDIES, OTHER WORK, TESTIMONIALS
 // =================================================================================
 
-// All case studies live here.
 const CASE_STUDIES = [
   {
     id: "cs1",
@@ -30,9 +29,9 @@ const CASE_STUDIES = [
       "A modern, responsive portfolio experience built to showcase my work as a Creative Lead and UX/UI designer. The project focuses on clear information hierarchy, reusable components, and a cohesive visual system that ties together brand, layout, and interactions.",
     company: "Personal Project",
     services: "Brand, UX/UI Design, Front-End Development",
-    websiteLink: null, // not needed inside the modal
+    websiteLink: null,
     githubLink: "https://github.com/pseasty/CreativeLead",
-    thumbnail: "/PortThumb.png",
+    thumbnail: "/PortThumb.png",             // used for both desktop & mobile
     images: {
       main: "/PortThumb.png",
       brand: "/PortGuides.png",
@@ -52,10 +51,11 @@ const CASE_STUDIES = [
     company: "Global Meditation Organization",
     services:
       "UX Design, Interaction Design, Design Systems, Cross-functional Collaboration",
-    websiteLink: "#", // not needed in the modal right now
-    thumbnail: "/CS1Preview.png", // preview card image; hero uses Desktop.jpg
-
-    // 🔹 keep this if you still want the raw prototype link:
+    websiteLink: "#",
+    // 👇 desktop vs mobile thumbnails
+    thumbnailDesktop: "/CS2Preview.png",          // wide desktop-oriented
+    thumbnailMobile: "/CS2PrevieMobile.png",   // tall mobile preview
+    // keep if you still want the raw prototype link:
     prototypeUrl:
       "https://embed.figma.com/proto/NYZ9iuCMQWSwygezbhkX9W/Flow-for-Portfolio?page-id=0%3A1&node-id=1-190&p=f&viewport=40%2C218%2C0.13&scaling=scale-down&content-scaling=fixed&embed-host=share",
     images: {
@@ -82,7 +82,9 @@ const CASE_STUDIES = [
       "Art Direction, Product Photography, Brand System, Video, Performance Marketing",
     websiteLink: null,
     githubLink: null,
-    thumbnail: "/Linkup1.png",
+    // 👇 desktop vs mobile thumbnails
+    thumbnailDesktop: "/Linkup1.png",          // wide desktop shot
+    thumbnailMobile: "/CS3PreviewMobile.png",  // mobile preview
     images: {
       main: "/Linkup1.png",
       brand: "/Linkup2.jpg",
@@ -101,30 +103,30 @@ const CASE_STUDIES = [
   },
 ];
 
+
 const OTHER_WORK_GALLERY = [
   {
     id: "ow1",
     title: "Product 3D & Packaging Explorations",
     role: "Industrial / Visual Design",
     thumbnail: "/3DProduct.png",
-    expandable: true,           // 🔍 click to expand image
+    expandable: true, // 🔍 click to expand image
   },
   {
     id: "ow2",
     title: "Motion Graphics & Title Sequences",
     role: "After Effects / Video",
     thumbnail: "/gallery-motion.jpg",
-    videoId: "NhL4v8RF-FY",     // or your latest YouTube ID
+    videoId: "NhL4v8RF-FY", // or your latest YouTube ID
   },
   {
     id: "ow3",
     title: "Print Collateral",
     role: "Print / Package Design",
     thumbnail: "/package.png",
-    expandable: true,           // 🔍 click to expand image
+    expandable: true, // 🔍 click to expand image
   },
 ];
-
 
 const testimonialsData = [
   {
@@ -607,33 +609,27 @@ const ProjectModal = ({ project, onClose, onNav }) => {
     transition: { duration: 0.6, ease: "easeOut" },
   };
 
-// Simplified RowReveal that works in Chrome builds
-const RowReveal = ({ children, delay = 0 }) => (
-  <motion.div
-    // 1. Added 'z-10' to force a stacking context
-    className="relative z-10" 
-    initial={{
-      opacity: 0,
-      y: 40, // Slide up from 40px
-    }}
-    whileInView={{
-      opacity: 1,
-      y: 0,
-    }}
-    viewport={{
-      once: true,
-      amount: 0.1, // Trigger as soon as 10% is visible
-    }}
-    transition={{
-      duration: 0.8,
-      ease: "easeOut",
-      delay: delay + 0.1,
-    }}
-  >
-    {children}
-  </motion.div>
-);
-
+  // Simplified RowReveal – animate on mount, no IntersectionObserver
+  const RowReveal = ({ children, delay = 0 }) => (
+    <motion.div
+      className="overflow-hidden"
+      initial={{
+        opacity: 0,
+        y: 32,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+      }}
+      transition={{
+        duration: 0.8,
+        ease: "easeOut",
+        delay,
+      }}
+    >
+      {children}
+    </motion.div>
+  );
 
   return (
     <div className="fixed inset-x-0 bottom-0 top-[88px] z-40 bg-black/40 flex justify-center items-stretch">
@@ -654,9 +650,9 @@ const RowReveal = ({ children, delay = 0 }) => (
           </button>
         </div>
 
-           {/* ============================================================
-               CS1 – UX / Website
-               ============================================================ */}
+        {/* ============================================================
+            Case Study Body
+           ============================================================ */}
         <div className="max-w-container mx-auto px-4 lg:px-[110px] pt-8 pb-24">
           {/* Overview (hero copy) */}
           <motion.section
@@ -797,174 +793,153 @@ const RowReveal = ({ children, delay = 0 }) => (
             )}
 
             {/* Creative Lead takeaway – CS1 */}
-              {project.id === "cs1" && (
-                <RowReveal delay={0.2}>
-                  <div className="bg-med-background p-8 rounded-card text-text-dark">
-                    <h3 className="text-h3 font-heading font-bold text-text-dark">
-                      Why This Matters in a Creative Lead Role
-                    </h3>
-                    <p className="font-body text-xl text-text-secondary mt-4">
-                      This portfolio project isn&apos;t just a personal site—it&apos;s a
-                      sandbox for how I think about leading digital work end to end.
-                    </p>
-                    <ul className="font-body text-xl text-text-secondary mt-4 space-y-2 list-disc list-inside">
-                      <li>
-                        I defined the visual direction, interaction patterns, and narrative
-                        so the experience feels cohesive from hero to footer.
-                      </li>
-                      <li>
-                        I treated the front-end like a design system—components, tokens, and
-                        motion primitives that can be reused and extended by a team.
-                      </li>
-                      <li>
-                        I did the hands-on implementation in React and Framer Motion, which
-                        helps me give grounded feedback to engineers and move faster together.
-                      </li>
-                    </ul>
-                  </div>
-                </RowReveal>
-              )}
+            {project.id === "cs1" && (
+              <RowReveal delay={0.2}>
+                <div className="bg-med-background p-8 rounded-card text-text-dark">
+                  <h3 className="text-h3 font-heading font-bold text-text-dark">
+                    Why This Matters in a Creative Lead Role
+                  </h3>
+                  <p className="font-body text-xl text-text-secondary mt-4">
+                    This portfolio project isn&apos;t just a personal site—it&apos;s
+                    a sandbox for how I think about leading digital work end to
+                    end.
+                  </p>
+                  <ul className="font-body text-xl text-text-secondary mt-4 space-y-2 list-disc list-inside">
+                    <li>
+                      I defined the visual direction, interaction patterns, and
+                      narrative so the experience feels cohesive from hero to
+                      footer.
+                    </li>
+                    <li>
+                      I treated the front-end like a design system—components,
+                      tokens, and motion primitives that can be reused and
+                      extended by a team.
+                    </li>
+                    <li>
+                      I did the hands-on implementation in React and Framer
+                      Motion, which helps me give grounded feedback to engineers
+                      and move faster together.
+                    </li>
+                  </ul>
+                </div>
+              </RowReveal>
+            )}
 
-              {/* ============================================================
+            {/* ============================================================
                 CS2 – Registration flow / meditation org
                 Newspaper-style layout + animations
                 ============================================================ */}
-              {project.id === "cs2" && (
-                <>
-                  {/* Main two-column “newspaper” grid */}
-                  <div className="grid grid-cols-2 gap-16 items-start max-lg:grid-cols-1 max-lg:gap-10">
-                    {/* LEFT COLUMN */}
-                    <div className="space-y-10">
-                      {/* Before – text card */}
-                      <motion.div
-                        className="bg-med-background p-8 rounded-card text-text-dark"
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.3 }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
-                      >
+            {project.id === "cs2" && (
+              <>
+                {/* Main two-column “newspaper” grid */}
+                <div className="grid grid-cols-2 gap-16 items-start max-lg:grid-cols-1 max-lg:gap-10">
+                  {/* LEFT COLUMN */}
+                  <div className="space-y-10">
+                    {/* Before – text card */}
+                    <RowReveal>
+                      <div className="bg-med-background p-8 rounded-card text-text-dark">
                         <h3 className="text-h3 font-heading font-bold text-text-dark">
                           Before
                         </h3>
                         <p className="text-xl text-text-secondary mt-4">
-                          The original confirmation and enrollment management screen (
-                          <span className="font-semibold">“BeforeDR.jpg”</span>) was dense,
-                          visually dated, and only loosely aligned with the
-                          organization&apos;s design standards. Core actions were hard to
-                          spot, forcing users to hunt through multiple controls just to
-                          confirm or update their status.
+                          The original confirmation and enrollment management
+                          screen (
+                          <span className="font-semibold">“BeforeDR.jpg”</span>)
+                          was dense, visually dated, and only loosely aligned
+                          with the organization&apos;s design standards. Core
+                          actions were hard to spot, forcing users to hunt
+                          through multiple controls just to confirm or update
+                          their status.
                         </p>
-                      </motion.div>
+                      </div>
+                    </RowReveal>
 
-                      {/* Before – legacy screen image */}
-                      {project.images?.before && (
-                        <motion.div
-                          className="bg-white rounded-card p-4 border border-gray-200"
-                          initial={{ opacity: 0, y: 30 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, amount: 0.3 }}
-                          transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
-                        >
+                    {/* Before – legacy screen image */}
+                    {project.images?.before && (
+                      <RowReveal>
+                        <div className="bg-white rounded-card p-4 border border-gray-200">
                           <img
                             src={project.images.before}
                             alt={`${project.title} – legacy multi-enrollment flow`}
                             className="w-full h-auto block rounded-md"
                           />
-                        </motion.div>
-                      )}
+                        </div>
+                      </RowReveal>
+                    )}
 
-                      {/* Working within a global design system – text card */}
-                      {project.images?.orgStandards && (
-                        <motion.div
-                          className="bg-med-background p-8 rounded-card text-text-dark"
-                          initial={{ opacity: 0, y: 30 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, amount: 0.3 }}
-                          transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
-                        >
+                    {/* Working within a global design system – text card */}
+                    {project.images?.orgStandards && (
+                      <RowReveal>
+                        <div className="bg-med-background p-8 rounded-card text-text-dark">
                           <h3 className="text-h3 font-heading font-bold text-text-dark">
                             Working Within a Global Design System
                           </h3>
                           <p className="text-xl text-text-secondary mt-4">
-                            The organization already had a strong visual identity. My job
-                            wasn&apos;t to reinvent it, but to apply it correctly to a complex
-                            registration context. That meant respecting locked trademarks,
-                            typography rules, and colour usage while still making the
-                            interface feel clearer and more modern.
+                            The organization already had a strong visual
+                            identity. My job wasn&apos;t to reinvent it, but to
+                            apply it correctly to a complex registration
+                            context. That meant respecting locked trademarks,
+                            typography rules, and colour usage while still
+                            making the interface feel clearer and more modern.
                           </p>
                           <p className="text-xl text-text-secondary mt-4">
-                            In fast-paced working sessions (often 15 minutes at a time) with
-                            the design standards team and DevOps, I walked stakeholders
-                            through why certain conventions mattered—like keeping the logo
-                            lockup intact to avoid diluting the brand and ensuring the system
+                            In fast-paced working sessions (often 15 minutes at
+                            a time) with the design standards team and DevOps, I
+                            walked stakeholders through why certain conventions
+                            mattered—like keeping the logo lockup intact to
+                            avoid diluting the brand and ensuring the system
                             felt cohesive across touchpoints.
                           </p>
-                        </motion.div>
-                      )}
+                        </div>
+                      </RowReveal>
+                    )}
 
-                      {/* Guides image */}
-                      {project.images?.guides && (
-                        <motion.div
-                          className="bg-white rounded-card p-4 border border-gray-200"
-                          initial={{ opacity: 0, y: 30 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, amount: 0.3 }}
-                          transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
-                        >
+                    {/* Guides image */}
+                    {project.images?.guides && (
+                      <RowReveal>
+                        <div className="bg-white rounded-card p-4 border border-gray-200">
                           <img
                             src={project.images.guides}
                             alt={`${project.title} – component, colour, and typography guides`}
                             className="w-full h-auto block rounded-md"
                           />
-                        </motion.div>
-                      )}
+                        </div>
+                      </RowReveal>
+                    )}
 
-                      {/* GridGuide image */}
-                      {project.images?.grid && (
-                        <motion.div
-                          className="bg-white rounded-card p-4 border border-gray-200"
-                          initial={{ opacity: 0, y: 30 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, amount: 0.3 }}
-                          transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
-                        >
+                    {/* GridGuide image */}
+                    {project.images?.grid && (
+                      <RowReveal>
+                        <div className="bg-white rounded-card p-4 border border-gray-200">
                           <img
                             src={project.images.grid}
                             alt={`${project.title} – layout measurement overlays`}
                             className="w-full h-auto block rounded-md"
                           />
-                        </motion.div>
-                      )}
-                    </div>
+                        </div>
+                      </RowReveal>
+                    )}
+                  </div>
 
-                    {/* RIGHT COLUMN */}
-                    <div className="space-y-10">
-                      {/* After – redesigned mobile screen image */}
-                      {project.images?.after && (
-                        <motion.div
-                          className="bg-white rounded-card p-4 border border-gray-200"
-                          initial={{ opacity: 0, y: 30 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, amount: 0.3 }}
-                          transition={{ duration: 0.5, ease: "easeOut" }}
-                        >
+                  {/* RIGHT COLUMN */}
+                  <div className="space-y-10">
+                    {/* After – redesigned mobile screen image */}
+                    {project.images?.after && (
+                      <RowReveal>
+                        <div className="bg-white rounded-card p-4 border border-gray-200">
                           <img
                             src={project.images.after}
                             alt={`${project.title} – redesigned multi-enrollment flow (mobile)`}
                             className="w-full h-auto block rounded-md"
                           />
-                        </motion.div>
-                      )}
+                        </div>
+                      </RowReveal>
+                    )}
 
-                      {/* After (mobile) – text card */}
-                      {project.images?.after && (
-                        <motion.div
-                          className="bg-med-background p-8 rounded-card text-text-dark"
-                          initial={{ opacity: 0, y: 30 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, amount: 0.3 }}
-                          transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
-                        >
+                    {/* After (mobile) – text card */}
+                    {project.images?.after && (
+                      <RowReveal>
+                        <div className="bg-med-background p-8 rounded-card text-text-dark">
                           <h3 className="text-h3 font-heading font-bold text-text-dark">
                             After (mobile)
                           </h3>
@@ -973,47 +948,40 @@ const RowReveal = ({ children, delay = 0 }) => (
                             <span className="font-semibold">
                               “320px Multi-Enroll. Expanded.jpg”
                             </span>
-                            ) introduces a clear primary CTA, calmer hierarchy, and obvious
-                            affordances so users can confirm, cancel, or adjust their
-                            enrollment without digging through hidden controls.
+                            ) introduces a clear primary CTA, calmer hierarchy,
+                            and obvious affordances so users can confirm,
+                            cancel, or adjust their enrollment without digging
+                            through hidden controls.
                           </p>
                           <p className="text-xl text-text-secondary mt-4">
                             The desktop version of this redesign (
-                            <span className="font-semibold">“Desktop.jpg”</span>) mirrors the
-                            same structure and lives in the hero image at the top of this case
-                            study.
+                            <span className="font-semibold">“Desktop.jpg”</span>
+                            ) mirrors the same structure and lives in the hero
+                            image at the top of this case study.
                           </p>
-                        </motion.div>
-                      )}
+                        </div>
+                      </RowReveal>
+                    )}
 
-                      {/* Design standards PDF – tall image */}
-                      {project.images?.orgStandards && (
-                        <motion.div
-                          className="bg-white rounded-card p-4 border border-gray-200"
-                          initial={{ opacity: 0, y: 30 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, amount: 0.3 }}
-                          transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
-                        >
+                    {/* Design standards PDF – tall image */}
+                    {project.images?.orgStandards && (
+                      <RowReveal>
+                        <div className="bg-white rounded-card p-4 border border-gray-200">
                           <img
                             src={project.images.orgStandards}
                             alt={`${project.title} – organization design standards`}
                             className="w-full h-auto block rounded-md"
                           />
-                        </motion.div>
-                      )}
-                    </div>
+                        </div>
+                      </RowReveal>
+                    )}
                   </div>
+                </div>
 
-                  {/* Jeremy images LEFT, Fast, Cross-functional Delivery RIGHT (full-width row) */}
-                  {(project.images?.dev1 || project.images?.dev2) && (
-                    <motion.div
-                      className="mt-12"
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.3 }}
-                      transition={{ duration: 0.5, ease: "easeOut" }}
-                    >
+                {/* Jeremy images LEFT, Fast, Cross-functional Delivery RIGHT (full-width row) */}
+                {(project.images?.dev1 || project.images?.dev2) && (
+                  <RowReveal>
+                    <div className="mt-12">
                       <div className="grid grid-cols-2 gap-16 max-lg:grid-cols-1 max-lg:gap-10">
                         {/* LEFT: images */}
                         <div className="bg-white rounded-card p-4 border border-gray-200 space-y-4">
@@ -1039,38 +1007,38 @@ const RowReveal = ({ children, delay = 0 }) => (
                             Fast, Cross-functional Delivery
                           </h3>
                           <p className="text-xl text-text-secondary mt-4">
-                            I partnered closely with the registration DevOps team to make sure
-                            the design was technically feasible and easy to maintain. We
-                            iterated in short working sessions, reviewing builds against the
-                            specs until the implementation matched the design one-to-one.
+                            I partnered closely with the registration DevOps
+                            team to make sure the design was technically
+                            feasible and easy to maintain. We iterated in short
+                            working sessions, reviewing builds against the specs
+                            until the implementation matched the design
+                            one-to-one.
                           </p>
                           <p className="text-xl text-text-secondary mt-4">
-                            These sessions weren&apos;t just about pixels—they were about
-                            aligning on why each convention existed, so engineers and designers
-                            were making the same tradeoffs for the same reasons.
+                            These sessions weren&apos;t just about pixels—they
+                            were about aligning on why each convention existed,
+                            so engineers and designers were making the same
+                            tradeoffs for the same reasons.
                           </p>
                         </div>
                       </div>
-                    </motion.div>
-                  )}
+                    </div>
+                  </RowReveal>
+                )}
 
-                  {/* Interactive Prototype (if provided) */}
-                  {project.prototypeUrl && (
-                    <motion.div
-                      className="bg-med-background p-8 rounded-card text-text-dark mt-12"
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.3 }}
-                      transition={{ duration: 0.5, ease: "easeOut" }}
-                    >
+                {/* Interactive Prototype (if provided) */}
+                {project.prototypeUrl && (
+                  <RowReveal>
+                    <div className="bg-med-background p-8 rounded-card text-text-dark mt-12">
                       <h3 className="text-h3 font-heading font-bold text-text-dark">
                         Interactive Prototype
                       </h3>
                       <p className="text-xl text-text-secondary mt-4">
-                        An interactive Figma prototype made it easy to walk stakeholders
-                        through the new flow in short, high-impact review sessions. Rather
-                        than debating static screens, we could click through confirmations,
-                        cancellations, and waitlist states the same way users would.
+                        An interactive Figma prototype made it easy to walk
+                        stakeholders through the new flow in short, high-impact
+                        review sessions. Rather than debating static screens, we
+                        could click through confirmations, cancellations, and
+                        waitlist states the same way users would.
                       </p>
 
                       <div className="w-full mt-4">
@@ -1084,42 +1052,42 @@ const RowReveal = ({ children, delay = 0 }) => (
                           />
                         </div>
                       </div>
-                    </motion.div>
-                  )}
+                    </div>
+                  </RowReveal>
+                )}
 
-                  {/* Creative Lead sign-off */}
-                  <motion.div
-                    className="bg-med-background p-8 rounded-card text-text-dark mt-10"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                  >
+                {/* Creative Lead sign-off */}
+                <RowReveal>
+                  <div className="bg-med-background p-8 rounded-card text-text-dark mt-10">
                     <h3 className="text-h3 font-heading font-bold text-text-dark">
                       How This Reflects My Leadership Style
                     </h3>
                     <p className="font-body text-xl text-text-secondary mt-4">
-                      This project sits at the intersection of UX, visual design, and
-                      cross-functional delivery—and represents the kind of work I lead best.
+                      This project sits at the intersection of UX, visual
+                      design, and cross-functional delivery—and represents the
+                      kind of work I lead best.
                     </p>
                     <ul className="font-body text-xl text-text-secondary mt-4 space-y-2 list-disc list-inside">
                       <li>
-                        I took a legacy, business-critical flow and turned it into something
-                        clearer and more humane without breaking existing constraints.
+                        I took a legacy, business-critical flow and turned it
+                        into something clearer and more humane without breaking
+                        existing constraints.
                       </li>
                       <li>
-                        I bridged between design standards, stakeholders, and DevOps—keeping
-                        the brand intact while moving quickly toward a shippable solution.
+                        I bridged between design standards, stakeholders, and
+                        DevOps—keeping the brand intact while moving quickly
+                        toward a shippable solution.
                       </li>
                       <li>
-                        I documented decisions so future designers and engineers can extend
-                        the system instead of reinventing it page by page.
+                        I documented decisions so future designers and engineers
+                        can extend the system instead of reinventing it page by
+                        page.
                       </li>
                     </ul>
-                  </motion.div>
-                </>
-              )}
-
+                  </div>
+                </RowReveal>
+              </>
+            )}
 
             {/* ============================================================
               CS3 – brand development graphic design
@@ -1132,7 +1100,7 @@ const RowReveal = ({ children, delay = 0 }) => (
                     <div className="grid grid-cols-2 gap-16 items-center max-lg:grid-cols-1 max-lg:gap-8">
                       <div className="bg-white rounded-card p-4 border border-gray-200">
                         <img
-                          src={project.images.image4} // /Linkup4.jpg
+                          src={project.images.image4}
                           alt={`${project.title} product photography`}
                           className="w-full h-auto block rounded-md"
                         />
@@ -1174,7 +1142,7 @@ const RowReveal = ({ children, delay = 0 }) => (
 
                       <div className="bg-white rounded-card p-4 border border-gray-200">
                         <img
-                          src={project.images.brand} // /Linkup2.jpg
+                          src={project.images.brand}
                           alt={`${project.title} brand system visuals`}
                           className="w-full h-auto block rounded-md"
                         />
@@ -1189,7 +1157,7 @@ const RowReveal = ({ children, delay = 0 }) => (
                     <div className="grid grid-cols-2 gap-16 items-center max-lg:grid-cols-1 max-lg:gap-8">
                       <div className="bg-white rounded-card p-4 border border-gray-200">
                         <img
-                          src={project.images.components} // /Linkup3.jpg
+                          src={project.images.components}
                           alt={`${project.title} detail product imagery`}
                           className="w-full h-auto block rounded-md"
                         />
@@ -1200,12 +1168,14 @@ const RowReveal = ({ children, delay = 0 }) => (
                           Graphic Templates & Brand System
                         </h3>
                         <p className="font-body text-xl text-text-secondary mt-4">
-                          I created a suite of Illustrator templates and a flexible brand
-                          system built around consistent typography, colour palettes, and
-                          layout patterns. With the core style guides established, it became
-                          easier to shape photography, refine delivered assets, and produce
-                          campaign-ready collateral that stayed true to the brand while
-                          giving contributors clear creative direction.
+                          I created a suite of Illustrator templates and a
+                          flexible brand system built around consistent
+                          typography, colour palettes, and layout patterns. With
+                          the core style guides established, it became easier to
+                          shape photography, refine delivered assets, and
+                          produce campaign-ready collateral that stayed true to
+                          the brand while giving contributors clear creative
+                          direction.
                         </p>
                       </div>
                     </div>
@@ -1221,16 +1191,17 @@ const RowReveal = ({ children, delay = 0 }) => (
                           Campaign-Ready Visual Variations
                         </h3>
                         <p className="font-body text-xl text-text-secondary mt-4">
-                          To support different platforms and formats, I built out alternate
-                          crops and compositions of the hero photography. These variations
-                          kept the core look intact while adapting to thumbnails, banners,
-                          and marketplace image requirements.
+                          To support different platforms and formats, I built
+                          out alternate crops and compositions of the hero
+                          photography. These variations kept the core look
+                          intact while adapting to thumbnails, banners, and
+                          marketplace image requirements.
                         </p>
                       </div>
 
                       <div className="bg-white rounded-card p-4 border border-gray-200">
                         <img
-                          src={project.images.image5} // /Linkup5.jpg
+                          src={project.images.image5}
                           alt={`${project.title} additional campaign visual`}
                           className="w-full h-auto block rounded-md"
                         />
@@ -1263,11 +1234,12 @@ const RowReveal = ({ children, delay = 0 }) => (
                           Product Video & Logo Animation
                         </h3>
                         <p className="font-body text-xl text-text-secondary mt-4">
-                          I partnered with a motion designer to develop the Linkup logo
-                          animation and then directed and shot the flagship product video.
-                          I provided the script, music, and overall creative direction, then
-                          collaborated on post-production to make sure the final cut matched
-                          the brand system.
+                          I partnered with a motion designer to develop the
+                          Linkup logo animation and then directed and shot the
+                          flagship product video. I provided the script, music,
+                          and overall creative direction, then collaborated on
+                          post-production to make sure the final cut matched the
+                          brand system.
                         </p>
                         <p className="font-body text-sm text-text-secondary mt-4">
                           Watch the product spot directly in this case study.
@@ -1278,53 +1250,58 @@ const RowReveal = ({ children, delay = 0 }) => (
                 )}
 
                 {/* Marketing & performance card + expandable thumbnails – media RIGHT */}
-                {project.marketingImages && project.marketingImages.length > 0 && (
-                  <RowReveal delay={0.32}>
-                    <div className="grid grid-cols-2 gap-16 items-start max-lg:grid-cols-1 max-lg:gap-8">
-                      <div className="bg-med-background p-8 rounded-card text-text-dark">
-                        <h3 className="text-h3 font-heading font-bold text-text-dark">
-                          Marketing & Performance
-                        </h3>
-                        <p className="font-body text-xl text-text-secondary mt-4">
-                          Beyond the visuals, I managed day-to-day marketing activity around
-                          the product line at Linkup Technologies Inc.—including the YouTube
-                          channel, Facebook and Instagram content, Google Analytics
-                          reporting for the website, and a range of Amazon PPC and other
-                          performance campaigns over several years.
-                        </p>
-                        <p className="font-body text-xl text-text-secondary mt-4">
-                          Having direct access to the numbers meant I could see which
-                          creative and formats were working and adjust the stories we told
-                          across video, social, and product pages.
-                        </p>
-                      </div>
+                {project.marketingImages &&
+                  project.marketingImages.length > 0 && (
+                    <RowReveal delay={0.32}>
+                      <div className="grid grid-cols-2 gap-16 items-start max-lg:grid-cols-1 max-lg:gap-8">
+                        <div className="bg-med-background p-8 rounded-card text-text-dark">
+                          <h3 className="text-h3 font-heading font-bold text-text-dark">
+                            Marketing & Performance
+                          </h3>
+                          <p className="font-body text-xl text-text-secondary mt-4">
+                            Beyond the visuals, I managed day-to-day marketing
+                            activity around the product line at Linkup
+                            Technologies Inc.—including the YouTube channel,
+                            Facebook and Instagram content, Google Analytics
+                            reporting for the website, and a range of Amazon PPC
+                            and other performance campaigns over several years.
+                          </p>
+                          <p className="font-body text-xl text-text-secondary mt-4">
+                            Having direct access to the numbers meant I could
+                            see which creative and formats were working and
+                            adjust the stories we told across video, social, and
+                            product pages.
+                          </p>
+                        </div>
 
-                      <div className="space-y-4">
-                        <p className="font-body text-sm text-text-secondary">
-                          Selected marketing stills – tap to expand:
-                        </p>
-                        <div className="grid grid-cols-2 gap-4">
-                          {project.marketingImages.map((src, index) => (
-                            <button
-                              key={`${project.id}-mkt-${index}`}
-                              type="button"
-                              onClick={() => setExpandedImage(src)}
-                              className="group text-left"
-                            >
-                              <div className="rounded-card overflow-hidden border border-gray-200">
-                                <img
-                                  src={src}
-                                  alt={`${project.title} marketing visual ${index + 1}`}
-                                  className="w-full h-[220px] object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                                />
-                              </div>
-                            </button>
-                          ))}
+                        <div className="space-y-4">
+                          <p className="font-body text-sm text-text-secondary">
+                            Selected marketing stills – tap to expand:
+                          </p>
+                          <div className="grid grid-cols-2 gap-4">
+                            {project.marketingImages.map((src, index) => (
+                              <button
+                                key={`${project.id}-mkt-${index}`}
+                                type="button"
+                                onClick={() => setExpandedImage(src)}
+                                className="group text-left"
+                              >
+                                <div className="rounded-card overflow-hidden border border-gray-200">
+                                  <img
+                                    src={src}
+                                    alt={`${project.title} marketing visual ${
+                                      index + 1
+                                    }`}
+                                    className="w-full h-[220px] object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                                  />
+                                </div>
+                              </button>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </RowReveal>
-                )}
+                    </RowReveal>
+                  )}
 
                 {/* Creative Lead takeaway – CS3 */}
                 {project.id === "cs3" && (
@@ -1334,23 +1311,25 @@ const RowReveal = ({ children, delay = 0 }) => (
                         What This Shows About Me as a Creative Lead
                       </h3>
                       <p className="font-body text-xl text-text-secondary mt-4">
-                        This case study brings together brand, product storytelling, and
-                        performance marketing over several years of work.
+                        This case study brings together brand, product
+                        storytelling, and performance marketing over several
+                        years of work.
                       </p>
                       <ul className="font-body text-xl text-text-secondary mt-4 space-y-2 list-disc list-inside">
                         <li>
-                          I owned the visual system for a flagship product line, from
-                          product photography direction to templates and
+                          I owned the visual system for a flagship product line,
+                          from product photography direction to templates and
                           marketplace-ready assets.
                         </li>
                         <li>
-                          I worked closely with stakeholders across marketing and leadership
-                          to keep the creative consistent while we experimented with new
-                          formats.
+                          I worked closely with stakeholders across marketing
+                          and leadership to keep the creative consistent while
+                          we experimented with new formats.
                         </li>
                         <li>
-                          I tracked performance via analytics and campaigns, using results
-                          to refine the creative rather than designing in a vacuum.
+                          I tracked performance via analytics and campaigns,
+                          using results to refine the creative rather than
+                          designing in a vacuum.
                         </li>
                       </ul>
                     </div>
@@ -1359,63 +1338,63 @@ const RowReveal = ({ children, delay = 0 }) => (
               </>
             )}
 
-              {/* GitHub link card – optional, per project */}
-              {project.githubLink && (
-                <RowReveal delay={0.19}>
-                  <div className="mt-10 bg-med-background p-6 rounded-card flex flex-col gap-4 items-start text-text-dark">
-                    <div>
-                      <h3 className="text-h4 font-heading font-bold">
-                        View the Code on GitHub
-                      </h3>
-                      <p className="font-body text-text-secondary mt-1">
-                        This project is also available as a live React codebase,
-                        including the animation and layout system used in this
-                        case study.
-                      </p>
-                    </div>
-                    <a
-                      href={project.githubLink}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-primary-button text-white font-nav font-bold text-base hover:bg-opacity-90"
-                    >
-                      Open GitHub Repo
-                      <ArrowUpRight size={18} />
-                    </a>
+            {/* GitHub link card – optional, per project */}
+            {project.githubLink && (
+              <RowReveal delay={0.19}>
+                <div className="mt-10 bg-med-background p-6 rounded-card flex flex-col gap-4 items-start text-text-dark">
+                  <div>
+                    <h3 className="text-h4 font-heading font-bold">
+                      View the Code on GitHub
+                    </h3>
+                    <p className="font-body text-text-secondary mt-1">
+                      This project is also available as a live React codebase,
+                      including the animation and layout system used in this
+                      case study.
+                    </p>
                   </div>
-                </RowReveal>
-              )}
-            </div> {/* end mt-20 space-y-10 */}
-          </div>   {/* end max-w-container wrapper */}
-
-          {/* Global contact + footer at bottom of modal */}
-          <div className="bg-dark-background">
-            <ContactSection />
-            <Footer onNav={onNav} />
+                  <a
+                    href={project.githubLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-primary-button text-white font-nav font-bold text-base hover:bg-opacity-90"
+                  >
+                    Open GitHub Repo
+                    <ArrowUpRight size={18} />
+                  </a>
+                </div>
+              </RowReveal>
+            )}
           </div>
+        </div>
 
-          {/* Big image overlay for expandable thumbnails (cs3 marketing) */}
-          {expandedImage && (
+        {/* Global contact + footer at bottom of modal */}
+        <div className="bg-dark-background">
+          <ContactSection />
+          <Footer onNav={onNav} />
+        </div>
+
+        {/* Big image overlay for expandable thumbnails (cs3 marketing) */}
+        {expandedImage && (
+          <div
+            className="fixed inset-0 z-[70] bg-black/70 flex items-center justify-center px-4"
+            onClick={() => setExpandedImage(null)}
+          >
             <div
-              className="fixed inset-0 z-[70] bg-black/70 flex items-center justify-center px-4"
-              onClick={() => setExpandedImage(null)}
+              className="max-w-4xl w-full"
+              onClick={(e) => e.stopPropagation()}
             >
-              <div
-                className="max-w-4xl w-full"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <img
-                  src={expandedImage}
-                  alt="Expanded project visual"
-                  className="w-full h-auto rounded-card shadow-2xl"
-                />
-              </div>
+              <img
+                src={expandedImage}
+                alt="Expanded project visual"
+                className="w-full h-auto rounded-card shadow-2xl"
+              />
             </div>
-          )}
-        </motion.div>
-      </div>
-    );
-  };
+          </div>
+        )}
+      </motion.div>
+    </div>
+  );
+};
 
 // =================================================================================
 // WORK PAGE – headings animated on first load, blinds tied to intro
@@ -1523,12 +1502,30 @@ const WorkSection = ({
     max-tablet:mt-4
   `;
 
+  // 🔹 Card reveal animation – shared by ALL rows (cs1, cs2, cs3)
+  const cardInitial = {
+    opacity: 0,
+    clipPath: "inset(0 0 100% 0)", // fully hidden
+  };
+
+  const cardVisible = {
+    opacity: 1,
+    clipPath: "inset(0 0 0% 0)", // fully revealed
+  };
+
+  // Stagger rows slightly so they don't all open at the same time
+  const baseDelay = 0.15;
+  const perRowDelay = 0.15; // e.g., cs1: 0.15, cs2: 0.30, cs3: 0.45
+
+  const cardDelay =
+    introPhase === "settled" ? baseDelay + index * perRowDelay : 0;
+
   return (
     <section
       className={`
         pt-4 mb-12
         ${textAlign === "right" ? "text-right" : "text-left"}
-        max-lg:text-center
+        max-tablet:text-center
       `}
     >
       {/* Animated heading */}
@@ -1552,70 +1549,28 @@ const WorkSection = ({
         {title}
       </motion.h1>
 
-      {/* Cards / blinds */}
-      {isFirstRow ? (
-        // Row 1: tied to intro timeline — opens once headings settle
-        <motion.div
-          className={gridClasses}
-          style={{ transformOrigin: "top", willChange: "clip-path" }}
-          initial={{
-            opacity: 0,
-            clipPath: "inset(0 0 100% 0)",
-          }}
-          animate={
-            introPhase === "settled"
-              ? { opacity: 1, clipPath: "inset(0 0 0% 0)" }
-              : { opacity: 0, clipPath: "inset(0 0 100% 0)" }
-          }
-          transition={{
-            duration: 0.9,
-            delay: introPhase === "settled" ? 0.15 : 0,
-            ease: [0.2, 0.8, 0.3, 1],
-          }}
-        >
-          <ProjectCard project={project} onSelect={onProjectSelect} />
-        </motion.div>
-) : (
-        // Rows 2 & 3: "Blinds" Reveal via Height (Chrome-Safe)
-        // This mimics the clip-path effect by "unrolling" the container height.
-        <motion.div
-          className={gridClasses}
-          // 1. Hides content that hasn't "unrolled" yet
-          style={{ overflow: "hidden" }} 
-
-          // 2. Start with 0 height (effectively invisible)
-          initial={{ 
-            height: 0, 
-            opacity: 0 
-          }}
-          
-          // 3. Animate to natural height (unrolling top-to-bottom)
-          whileInView={{ 
-            height: "auto", 
-            opacity: 1 
-          }}
-          
-          // 4. Trigger early to ensure it catches the scroll
-          viewport={{
-            once: true,
-            amount: 0.45, 
-          }}
-          
-          // 5. Match your original slow, premium easing
-          transition={{
-            duration: 1.1,
-            delay: 0.2,
-            ease: [0.2, 0.8, 0.3, 1],
-          }}
-        >
-          <ProjectCard project={project} onSelect={onProjectSelect} />
-        </motion.div>
-      )}
+      {/* Cards / blinds – SAME pattern for cs1, cs2, cs3 */}
+      <motion.div
+        className={gridClasses}
+        style={{ transformOrigin: "top", willChange: "clip-path" }}
+        initial={cardInitial}
+        animate={introPhase === "settled" ? cardVisible : cardInitial}
+        transition={{
+          duration: isFirstRow ? 0.9 : 1.1,
+          delay: cardDelay,
+          ease: [0.2, 0.8, 0.3, 1],
+        }}
+      >
+        <ProjectCard project={project} onSelect={onProjectSelect} />
+      </motion.div>
     </section>
   );
 };
 
 const ProjectCard = ({ project, onSelect }) => {
+  const desktopThumb = project.thumbnailDesktop || project.thumbnail;
+  const mobileThumb = project.thumbnailMobile || desktopThumb;
+
   return (
     <motion.div
       className="group relative cursor-pointer w-full max-w-[1200px] mx-auto"
@@ -1624,11 +1579,16 @@ const ProjectCard = ({ project, onSelect }) => {
       onClick={() => onSelect && onSelect(project)}
     >
       <div className="relative w-full h-[520px] bg-med-background rounded-3xl overflow-hidden">
-        <img
-          src={project.thumbnail}
-          alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-        />
+        <picture>
+          {/* Mobile first */}
+          <source media="(max-width: 768px)" srcSet={mobileThumb} />
+          {/* Default / desktop */}
+          <img
+            src={desktopThumb}
+            alt={project.title}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+          />
+        </picture>
 
         <button
           type="button"
@@ -1660,6 +1620,7 @@ const ProjectCard = ({ project, onSelect }) => {
     </motion.div>
   );
 };
+
 
 // =================================================================================
 // ABOUT PAGE
@@ -1733,7 +1694,15 @@ const AboutPage = ({ setCurrentPage }) => {
         </div>
 
         {/* HERO IMAGE WITH MOBILE GET IN TOUCH OVERLAY */}
-        <div className="relative w-full max-w-[500px] h-[500px] mx-auto tablet:max-w-[680px] tablet:h-[520px] lg:max-w-[720px] lg:h-[540px] max-tablet:-mt-8">
+        <div
+          className="
+            relative w-full max-w-[500px] h-[500px] mx-auto
+            tablet:max-w-[680px] tablet:h-[520px]
+            lg:max-w-[720px] lg:h-[540px]
+            max-tablet:-mt-8
+            max-mobile:max-w-[360px] max-mobile:h-[420px]
+          "
+        >
           <img
             src="/hero.png"
             alt="Patrick East"
@@ -1975,7 +1944,7 @@ const AboutPage = ({ setCurrentPage }) => {
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <div className="max-w-[576px] mx-auto text-center">
+        <div className="max-w-[576px] mx-auto text-center px-4 tablet:px-0">
           <h3 className="text-h2 font-bold font-heading text-white">
             Patrick East
           </h3>
@@ -2033,7 +2002,6 @@ const AboutPage = ({ setCurrentPage }) => {
     </div>
   );
 };
-
 
 // =================================================================================
 // SMALL SHARED PIECES
